@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  transition: 0.3s;
+}
+
+.light {
+  background: #f8f8ff;
+  color: #111;
+}
+
+.dark {
+  background: #0b061a;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
