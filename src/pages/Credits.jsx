@@ -6,119 +6,164 @@ export default function Credits() {
   const { addToCart } = useContext(CartContext);
 
   const [quantities, setQuantities] = useState(
-    products.reduce((acc, p) => {
-      acc[p.id] = 1;
+    products.reduce((acc, prod) => {
+      acc[prod.id] = 1;
       return acc;
     }, {})
   );
 
-  const handleQty = (id, change) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max(1, prev[id] + change),
-    }));
-  };
-
-  const handleAdd = (product) => {
+  const handleAddToCart = (product) => {
     addToCart({
       ...product,
       quantity: quantities[product.id],
     });
 
-    alert("Added to cart!");
+    alert(`${product.title} added to cart!`);
+  };
+
+  const handleQuantityChange = (id, delta) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(1, (prev[id] || 1) + delta),
+    }));
   };
 
   return (
     <div style={styles.page}>
-      <h1 style={styles.heading}>IT Services</h1>
-      <p style={styles.sub}>Select your required service</p>
+      <h1 style={styles.heading}>Arcade Tech Solution Credits</h1>
 
-      {products.map((product) => (
-        <div key={product.id} style={styles.card}>
-          <img src={product.img} style={styles.img} />
+      <div style={styles.grid}>
+        {products.map((product) => (
+          <div key={product.id} style={styles.card}>
+            
+            {/* ✅ FIXED IMG (ALT ADDED) */}
+            <img
+              src={product.img}
+              alt={product.title}
+              style={styles.img}
+            />
 
-          <div style={{ flex: 1 }}>
-            <h2>{product.title}</h2>
-            <p style={styles.price}>From ${product.price}</p>
+            <h2 style={styles.title}>{product.title}</h2>
 
-            {/* QTY */}
+            <p style={styles.price}>${product.price} USD</p>
+
             <div style={styles.qtyBox}>
-              <button onClick={() => handleQty(product.id, -1)} style={styles.btn}>-</button>
-              <span style={{ margin: "0 10px" }}>{quantities[product.id]}</span>
-              <button onClick={() => handleQty(product.id, 1)} style={styles.btn}>+</button>
+              <button
+                style={styles.qtyBtn}
+                onClick={() => handleQuantityChange(product.id, -1)}
+              >
+                -
+              </button>
+
+              <span style={styles.qty}>
+                {quantities[product.id]}
+              </span>
+
+              <button
+                style={styles.qtyBtn}
+                onClick={() => handleQuantityChange(product.id, 1)}
+              >
+                +
+              </button>
             </div>
 
-            {/* ONLY CART */}
-            <button style={styles.cartBtn} onClick={() => handleAdd(product)}>
+            <button
+              style={styles.cartBtn}
+              onClick={() => handleAddToCart(product)}
+            >
               🛒 Add to Cart
             </button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
 
-/* STYLES */
+/* ================= STYLES ================= */
+
 const styles = {
   page: {
     padding: "40px 20px",
-    maxWidth: "1000px",
+    maxWidth: "1100px",
     margin: "auto",
     fontFamily: "sans-serif",
+    background: "#f5f3ff",
     minHeight: "100vh",
-    background: "linear-gradient(135deg,#0f172a,#1e0a3c,#4c1d95)",
-    color: "white",
   },
 
   heading: {
     textAlign: "center",
-    fontSize: "2.3rem",
+    fontSize: "2.2rem",
+    marginBottom: "30px",
+    color: "#4c1d95",
+    fontWeight: "bold",
   },
 
-  sub: {
-    textAlign: "center",
-    color: "#c7d2fe",
-    marginBottom: "20px",
+  grid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "20px",
+    justifyContent: "center",
   },
 
   card: {
-    display: "flex",
-    gap: "20px",
-    padding: "20px",
-    marginBottom: "15px",
-    background: "rgba(255,255,255,0.08)",
+    width: "280px",
+    background: "#fff",
     borderRadius: "15px",
-    border: "1px solid rgba(255,255,255,0.15)",
+    padding: "15px",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+    textAlign: "center",
   },
 
   img: {
-    width: "180px",
-    borderRadius: "10px",
+    width: "100%",
+    height: "160px",
+    objectFit: "cover",
+    borderRadius: "12px",
+  },
+
+  title: {
+    fontSize: "18px",
+    margin: "10px 0",
+  },
+
+  price: {
+    color: "#7c3aed",
+    fontWeight: "bold",
+    marginBottom: "10px",
   },
 
   qtyBox: {
     display: "flex",
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: "10px",
+    gap: "10px",
+    marginBottom: "10px",
   },
 
-  btn: {
-    padding: "5px 10px",
+  qtyBtn: {
+    padding: "6px 12px",
     background: "#7c3aed",
-    border: "none",
     color: "white",
+    border: "none",
     borderRadius: "6px",
     cursor: "pointer",
+    fontWeight: "bold",
+  },
+
+  qty: {
+    fontWeight: "bold",
+    fontSize: "16px",
   },
 
   cartBtn: {
-    marginTop: "10px",
-    padding: "10px",
+    padding: "10px 15px",
     background: "#10b981",
-    border: "none",
     color: "white",
+    border: "none",
     borderRadius: "8px",
     cursor: "pointer",
+    fontWeight: "bold",
   },
 };
